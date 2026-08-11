@@ -41,19 +41,50 @@ du jeu de données d'origine.
   des prospects + bouton "+ Nouveau prospect".
 - **Nouveau prospect** (`/prospects/new`) — formulaire de création.
 - **Détail prospect** (`/prospects/:id`) — toutes les informations, statut prospect
-  (modifiable), statut du site, boutons "Générer le site" et "Générer l'email"
-  (visuels uniquement en V1 — aucune génération réelle), "Voir le site" (si un site
+  (modifiable), statut du site, boutons "Générer le site" (génère réellement un site
+  local à partir de `templates/business/`, voir ci-dessous) et "Générer l'email"
+  (visuel uniquement en V1 — aucune génération réelle), "Voir le site" (si un site
   est marqué comme généré) et "Modifier".
 - **Modifier prospect** (`/prospects/:id/edit`) — même formulaire que la création,
   pré-rempli.
 
+## Génération de site (première fonctionnalité métier)
+
+Le bouton "Générer le site" appelle `POST /api/generate-site`, une route exposée
+uniquement par le serveur de dev Vite (`vite.config.js` + `server/generateSite.js`,
+voir dans ce dossier). Elle tourne **uniquement avec `npm run dev`** (aucun serveur de
+production, aucun backend distant) et :
+
+1. slugifie le nom du commerce (`"Le Barbier Lillois"` → `"le-barbier-lillois"`) ;
+2. crée `prospects/<slug>/data.json` avec les informations du prospect, au format
+   attendu par `templates/business/` (les sections non collectées par le dashboard —
+   services, galerie, avis, horaires — reçoivent un contenu générique explicitement
+   marqué "à compléter", jamais des informations inventées) ;
+3. copie `templates/business/{index.html,style.css,script.js}` vers
+   `prospects/<slug>/site/`, en adaptant uniquement le chemin `data-source` de la
+   copie vers `../data.json` — le template original n'est jamais modifié ;
+4. met à jour le prospect dans le dashboard : `siteStatus = "Généré"`,
+   `siteUrl = "/prospects/<slug>/site/index.html"`.
+
+Régénérer un prospect déjà généré écrase son dossier existant (idempotent) ; deux
+prospects différents dont le nom se slugifierait à l'identique reçoivent des dossiers
+distincts (`<slug>-2`, `<slug>-3`, …).
+
+Le serveur de dev sert aussi directement `/prospects/**` et `/templates/**` (lecture
+disque, dev-only), donc le bouton "Voir le site" ouvre le site généré immédiatement,
+sans lancer de second serveur statique.
+
 ## Limites connues de la V1
 
-- "Générer le site" et "Générer l'email" n'exécutent aucune action réelle — ils
-  affichent une notification indiquant que la fonctionnalité arrivera plus tard.
-- Le bouton "Voir le site" des prospects de démonstration marqués "Site généré"
-  pointe vers un chemin relatif vers `templates/business/` : il ne s'ouvrira que si
-  vous servez l'ensemble du repository en statique depuis sa racine (voir le README
-  principal), pas si vous n'avez lancé que `npm run dev` dans `dashboard/`.
-- Les données ne sont pas partagées entre navigateurs, machines, ni persistées hors
-  du `localStorage` : c'est un choix volontaire pour cette V1 sans base de données.
+- "Générer l'email" n'exécute aucune action réelle — il affiche une notification
+  indiquant que la fonctionnalité arrivera plus tard.
+- Le bouton "Voir le site" des prospects de **démonstration** pré-marqués "Site
+  généré" dans `mockProspects.js` (jamais passés par le vrai bouton "Générer le
+  site") pointe vers `templates/business/` : il ne s'ouvrira que si vous servez
+  l'ensemble du repository en statique depuis sa racine (voir le README principal).
+  Les sites réellement générés via le bouton s'ouvrent directement depuis le
+  serveur de dev, voir ci-dessus.
+- Les données prospect ne sont pas partagées entre navigateurs, machines, ni
+  persistées hors du `localStorage` : c'est un choix volontaire pour cette V1 sans
+  base de données. Les fichiers générés par "Générer le site", eux, sont écrits sur
+  disque dans `prospects/` et donc bien réels et partagés (via le repo git).

@@ -57,12 +57,32 @@ Par défaut, la page charge les données de démonstration
 
 ## Créer un site pour un nouveau prospect
 
-1. Copiez `templates/business/` vers `prospects/<nom-du-prospect>/`.
-2. Dans ce nouveau dossier, créez un `data.json` avec les informations du commerce
-   (reprenez `prospects/example/data.json` comme modèle).
-3. Dans le `index.html` copié, changez la balise meta pour pointer vers le fichier local :
+### Automatiquement, depuis le dashboard
+
+Depuis la fiche d'un prospect dans le dashboard (`dashboard/`, `npm run dev`), le
+bouton "Générer le site" crée réellement :
+
+```
+prospects/<slug-du-commerce>/
+  data.json      → informations du prospect, format compatible templates/business/
+  site/
+    index.html   → copie du template, data-source adapté vers ../data.json
+    style.css
+    script.js
+```
+
+Voir `dashboard/README.md` (section "Génération de site") pour le détail. C'est la
+méthode recommandée — elle suit exactement les étapes manuelles ci-dessous.
+
+### Manuellement
+
+1. Copiez `templates/business/` vers `prospects/<nom-du-prospect>/site/`.
+2. À côté (dans `prospects/<nom-du-prospect>/`), créez un `data.json` avec les
+   informations du commerce (reprenez `prospects/example/data.json` comme modèle).
+3. Dans le `index.html` copié, changez la balise meta pour pointer vers le fichier
+   du prospect :
    ```html
-   <meta name="data-source" content="data.json">
+   <meta name="data-source" content="../data.json">
    ```
 4. Servez le dossier en HTTP (voir ci-dessus) pour vérifier le rendu.
 

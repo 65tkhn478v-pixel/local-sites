@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getProspect, updateProspect } from "../data/store";
 import { PROSPECT_STATUSES } from "../data/statuses";
+import { requestSiteGeneration } from "../data/generateSite";
 import StatusBadge from "../components/StatusBadge";
 import Toast from "../components/Toast";
 
@@ -18,6 +19,7 @@ export default function ProspectDetailPage() {
   const { id } = useParams();
   const [version, setVersion] = useState(0);
   const [toast, setToast] = useState("");
+  const [generating, setGenerating] = useState(false);
 
   const prospect = getProspect(id);
 
@@ -37,11 +39,24 @@ export default function ProspectDetailPage() {
     setVersion((v) => v + 1);
   }
 
-  function handleGenerateSite() {
-    // V1 : bouton visuel uniquement, aucune génération réelle de site.
-    setToast(
-      "Génération de site à venir — cette action ne crée pas encore de fichiers réels."
-    );
+  async function handleGenerateSite() {
+    setGenerating(true);
+    try {
+      const result = await requestSiteGeneration(prospect);
+      updateProspect(id, {
+        siteStatus: "Généré",
+        siteUrl: result.siteUrl,
+        slug: result.slug,
+        sitePath: result.sitePath,
+        dataPath: result.dataPath,
+      });
+      setVersion((v) => v + 1);
+      setToast(`Site généré dans ${result.prospectDir}/`);
+    } catch (err) {
+      setToast(err.message || "Échec de la génération du site.");
+    } finally {
+      setGenerating(false);
+    }
   }
 
   function handleGenerateEmail() {
@@ -117,8 +132,12 @@ export default function ProspectDetailPage() {
             </span>
 
             <div className="detail-actions">
-              <button className="btn btn-primary btn-block" onClick={handleGenerateSite}>
-                Générer le site
+              <button
+                className="btn btn-primary btn-block"
+                onClick={handleGenerateSite}
+                disabled={generating}
+              >
+                {generating ? "Génération…" : "Générer le site"}
               </button>
               {prospect.siteStatus === "Généré" && prospect.siteUrl && (
                 <a
@@ -136,8 +155,11 @@ export default function ProspectDetailPage() {
             </div>
             {prospect.siteStatus === "Généré" && (
               <p className="hint-text">
-                Aperçu disponible uniquement si le repository entier est servi
-                en statique depuis sa racine (voir README principal).
+                {prospect.slug
+                  ? "Site généré localement dans prospects/" +
+                    prospect.slug +
+                    "/ — servi automatiquement par ce serveur de dev (npm run dev)."
+                  : "Aperçu disponible uniquement si le repository entier est servi en statique depuis sa racine (voir README principal)."}
               </p>
             )}
           </div>

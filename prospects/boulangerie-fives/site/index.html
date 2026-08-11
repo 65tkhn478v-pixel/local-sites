@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-bind="business.name">Commerce Local</title>
+  <meta name="description" content="Site vitrine">
+  <!--
+    Chemin vers le fichier de données du prospect.
+    Pour un nouveau commerce : copiez ce dossier "business" vers prospects/<nom>/,
+    placez un data.json à côté d'index.html, puis changez ce chemin en "data.json".
+  -->
+  <meta name="data-source" content="../data.json">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#top" class="logo">
+        <span class="logo-badge" data-bind="business.logoInitials">BV</span>
+        <span class="logo-name" data-bind="business.name">Commerce Local</span>
+      </a>
+      <nav class="site-nav">
+        <a href="#about">Présentation</a>
+        <a href="#services">Services</a>
+        <a href="#gallery">Galerie</a>
+        <a href="#reviews">Avis</a>
+        <a href="#hours">Horaires</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <a class="btn btn-primary btn-small" data-bind-href="contact.phoneHref" data-href-prefix="tel:">Appeler</a>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container hero-inner">
+        <p class="eyebrow" data-bind="business.tagline">Tagline</p>
+        <h1 data-bind="hero.title">Titre principal</h1>
+        <p class="hero-subtitle" data-bind="hero.subtitle">Sous-titre</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" data-bind-href="contact.phoneHref" data-href-prefix="tel:" data-bind="hero.ctaLabel">Réserver</a>
+          <a class="btn btn-ghost" href="#services">Voir les tarifs</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Présentation -->
+    <section id="about" class="section about">
+      <div class="container about-grid">
+        <div class="about-text">
+          <h2 data-bind="about.title">Notre salon</h2>
+          <p data-bind="about.text">Texte de présentation.</p>
+          <ul class="highlights" data-list="about.highlights" data-item-template="highlight"></ul>
+        </div>
+        <div class="about-visual" aria-hidden="true">
+          <div class="about-visual-badge">
+            <span data-bind="business.logoInitials">BV</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services + tarifs -->
+    <section id="services" class="section services">
+      <div class="container">
+        <h2>Services &amp; tarifs</h2>
+        <div class="services-grid" data-list="services" data-item-template="service"></div>
+      </div>
+    </section>
+
+    <!-- Galerie -->
+    <section id="gallery" class="section gallery">
+      <div class="container">
+        <h2>Galerie</h2>
+        <div class="gallery-grid" data-list="gallery" data-item-template="gallery-item"></div>
+      </div>
+    </section>
+
+    <!-- Avis clients -->
+    <section id="reviews" class="section reviews">
+      <div class="container">
+        <h2>Avis clients</h2>
+        <div class="reviews-grid" data-list="reviews" data-item-template="review"></div>
+      </div>
+    </section>
+
+    <!-- Horaires + Adresse + Téléphone -->
+    <section id="hours" class="section info">
+      <div class="container info-grid">
+        <div class="info-card">
+          <h2>Horaires</h2>
+          <table class="hours-table">
+            <tbody data-list="hours" data-item-template="hour-row"></tbody>
+          </table>
+        </div>
+        <div class="info-card" id="contact">
+          <h2>Nous trouver</h2>
+          <ul class="contact-list">
+            <li>
+              <span class="contact-label">Adresse</span>
+              <a class="contact-value" data-bind="contact.address" data-bind-href="contact.mapsQuery" data-href-prefix="https://www.google.com/maps/search/?api=1&query=" target="_blank" rel="noopener">Adresse</a>
+            </li>
+            <li>
+              <span class="contact-label">Téléphone</span>
+              <a class="contact-value" data-bind="contact.phone" data-bind-href="contact.phoneHref" data-href-prefix="tel:">Téléphone</a>
+            </li>
+            <li>
+              <span class="contact-label">Email</span>
+              <a class="contact-value" data-bind="contact.email" data-bind-href="contact.email" data-href-prefix="mailto:">Email</a>
+            </li>
+          </ul>
+          <a class="btn btn-primary btn-block" data-bind-href="contact.phoneHref" data-href-prefix="tel:">Appeler pour réserver</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA final -->
+    <section class="section cta">
+      <div class="container cta-inner">
+        <h2>Prêt à passer chez nous ?</h2>
+        <p>Réservez votre créneau dès maintenant, par téléphone ou par email.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" data-bind-href="contact.phoneHref" data-href-prefix="tel:">Réserver par téléphone</a>
+          <a class="btn btn-ghost" data-bind-href="contact.email" data-href-prefix="mailto:">Envoyer un email</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <span class="logo-badge" data-bind="business.logoInitials">BV</span>
+        <span data-bind="business.name">Commerce Local</span>
+      </div>
+      <p data-bind="footer.text">Tous droits réservés</p>
+      <div class="footer-social">
+        <a data-bind-href="social.instagram" target="_blank" rel="noopener">Instagram</a>
+        <a data-bind-href="social.facebook" target="_blank" rel="noopener">Facebook</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Templates pour les listes générées par script.js -->
+  <template id="tpl-highlight">
+    <li>{{value}}</li>
+  </template>
+
+  <template id="tpl-service">
+    <div class="service-card">
+      <div class="service-card-header">
+        <h3>{{name}}</h3>
+        <span class="service-price">{{price}}</span>
+      </div>
+      <p class="service-description">{{description}}</p>
+      <span class="service-duration">{{duration}}</span>
+    </div>
+  </template>
+
+  <template id="tpl-gallery-item">
+    <div class="gallery-item" data-color="{{color}}">
+      <span class="gallery-caption">{{caption}}</span>
+    </div>
+  </template>
+
+  <template id="tpl-review">
+    <div class="review-card">
+      <div class="review-stars" data-stars="{{rating}}"></div>
+      <p class="review-text">« {{text}} »</p>
+      <p class="review-author">{{author}}</p>
+    </div>
+  </template>
+
+  <template id="tpl-hour-row">
+    <tr>
+      <td>{{day}}</td>
+      <td>{{hours}}</td>
+    </tr>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+</html>

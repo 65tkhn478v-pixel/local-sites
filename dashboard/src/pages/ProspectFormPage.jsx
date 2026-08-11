@@ -21,6 +21,7 @@ const EMPTY_FORM = {
   currentWebsite: "",
   instagram: "",
   description: "",
+  services: "",
 };
 
 export default function ProspectFormPage({ mode }) {
@@ -31,7 +32,17 @@ export default function ProspectFormPage({ mode }) {
   const [form, setForm] = useState(() => {
     if (isEdit) {
       const existing = getProspect(id);
-      if (existing) return { ...EMPTY_FORM, ...existing };
+      if (existing) {
+        return {
+          ...EMPTY_FORM,
+          ...existing,
+          // Anciennes données locales éventuellement non conformes (services
+          // n'était pas un champ texte avant) : on retombe sur une chaîne vide
+          // plutôt que de casser le <textarea> contrôlé.
+          services:
+            typeof existing.services === "string" ? existing.services : "",
+        };
+      }
     }
     return EMPTY_FORM;
   });
@@ -111,6 +122,18 @@ export default function ProspectFormPage({ mode }) {
             name="description"
             rows={4}
             value={form.description}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="form-field">
+          <label htmlFor="services">Services</label>
+          <textarea
+            id="services"
+            name="services"
+            rows={3}
+            placeholder="Un service par ligne, ex. : Coupe homme"
+            value={form.services}
             onChange={handleChange}
           />
         </div>

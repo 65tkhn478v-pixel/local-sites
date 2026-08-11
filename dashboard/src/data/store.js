@@ -47,6 +47,7 @@ export function createProspect(fields) {
     currentWebsite: fields.currentWebsite?.trim() || "",
     instagram: fields.instagram?.trim() || "",
     description: fields.description?.trim() || "",
+    services: fields.services?.trim() || "",
     status: DEFAULT_PROSPECT_STATUS,
     siteStatus: DEFAULT_SITE_STATUS,
     siteUrl: null,

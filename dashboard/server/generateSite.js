@@ -44,12 +44,35 @@ function phoneHref(phone) {
 }
 
 /**
+ * "Coupe homme\nRasage" → [{ name: "Coupe homme", ... }, { name: "Rasage", ... }]
+ * Le dashboard ne collecte qu'un nom par service (un par ligne) ; prix et
+ * durée restent à compléter directement dans data.json.
+ */
+function parseServices(rawServices) {
+  if (typeof rawServices !== "string") return null;
+
+  const lines = rawServices
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  if (lines.length === 0) return null;
+
+  return lines.map((name) => ({
+    name,
+    description: "Détaillez ici ce service et son tarif.",
+    price: "—",
+    duration: "—",
+  }));
+}
+
+/**
  * Construit un data.json compatible avec templates/business/ à partir des
  * champs (limités) collectés par le dashboard. Les sections que le
- * dashboard ne renseigne pas encore (services, galerie, avis, horaires)
- * reçoivent un contenu générique explicitement marqué "à compléter",
- * pour que le site généré s'affiche correctement sans jamais inventer
- * de fausses informations commerciales (horaires, avis...).
+ * dashboard ne renseigne pas encore (galerie, avis, horaires) reçoivent un
+ * contenu générique explicitement marqué "à compléter", pour que le site
+ * généré s'affiche correctement sans jamais inventer de fausses
+ * informations commerciales (horaires, avis...).
  */
 export function buildProspectData(prospect) {
   const name = prospect.name?.trim() || "Commerce local";
@@ -78,7 +101,7 @@ export function buildProspectData(prospect) {
         "Contenu généré automatiquement — à personnaliser dans data.json",
       ],
     },
-    services: [
+    services: parseServices(prospect.services) || [
       {
         name: "Prestation à définir",
         description: "Détaillez ici les services et tarifs proposés.",

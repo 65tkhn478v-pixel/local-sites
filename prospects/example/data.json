@@ -1,0 +1,109 @@
+{
+  "business": {
+    "name": "Barbier du Vieux-Lille",
+    "tagline": "Coupe, barbe et style depuis 2015",
+    "city": "Lille",
+    "logoInitials": "BVL"
+  },
+  "hero": {
+    "title": "L'art de la coupe, au cœur de Lille",
+    "subtitle": "Un salon de barbier traditionnel où précision et convivialité se rencontrent.",
+    "ctaLabel": "Réserver un créneau"
+  },
+  "about": {
+    "title": "Notre salon",
+    "text": "Installé en plein Vieux-Lille depuis près de 10 ans, le Barbier du Vieux-Lille est un salon à taille humaine où chaque client est reçu avec attention. Coupes classiques, tailles de barbe et rasages traditionnels : nous mettons notre savoir-faire au service de votre style, dans une ambiance chaleureuse et sans rendez-vous obligatoire.",
+    "highlights": [
+      "Barbiers diplômés et passionnés",
+      "Produits de soin haut de gamme",
+      "Ambiance conviviale et sans jugement",
+      "Rasage traditionnel au coupe-chou"
+    ]
+  },
+  "services": [
+    {
+      "name": "Coupe homme",
+      "description": "Coupe classique ou moderne, adaptée à votre visage",
+      "price": "25€",
+      "duration": "30 min"
+    },
+    {
+      "name": "Taille de barbe",
+      "description": "Taille et dessin précis à la tondeuse et au rasoir",
+      "price": "18€",
+      "duration": "20 min"
+    },
+    {
+      "name": "Coupe + Barbe",
+      "description": "La formule complète pour un look impeccable",
+      "price": "38€",
+      "duration": "45 min"
+    },
+    {
+      "name": "Rasage traditionnel",
+      "description": "Rasage à l'ancienne, serviette chaude et coupe-chou",
+      "price": "22€",
+      "duration": "30 min"
+    },
+    {
+      "name": "Coupe enfant",
+      "description": "Pour les moins de 12 ans, dans la bonne humeur",
+      "price": "15€",
+      "duration": "20 min"
+    },
+    {
+      "name": "Soin du visage",
+      "description": "Nettoyage, exfoliation et hydratation",
+      "price": "20€",
+      "duration": "25 min"
+    }
+  ],
+  "gallery": [
+    { "caption": "Salon vue d'ensemble", "color": "#2b2118" },
+    { "caption": "Poste de coupe", "color": "#3a2c1e" },
+    { "caption": "Espace rasage", "color": "#1f1a14" },
+    { "caption": "Produits de soin", "color": "#4a3524" },
+    { "caption": "Ambiance du salon", "color": "#2f2419" },
+    { "caption": "Finition barbe", "color": "#3d2e1f" }
+  ],
+  "reviews": [
+    {
+      "author": "Thomas D.",
+      "rating": 5,
+      "text": "Excellent accueil, coupe nickel et super conseils sur l'entretien de la barbe. Je recommande !"
+    },
+    {
+      "author": "Karim B.",
+      "rating": 5,
+      "text": "Mon barbier attitré depuis 2 ans. Toujours à l'écoute, jamais déçu."
+    },
+    {
+      "author": "Julien M.",
+      "rating": 4,
+      "text": "Très bon rapport qualité/prix, ambiance sympa. Un peu d'attente le samedi mais ça vaut le coup."
+    }
+  ],
+  "hours": [
+    { "day": "Lundi", "hours": "Fermé" },
+    { "day": "Mardi", "hours": "9h00 - 19h00" },
+    { "day": "Mercredi", "hours": "9h00 - 19h00" },
+    { "day": "Jeudi", "hours": "9h00 - 19h00" },
+    { "day": "Vendredi", "hours": "9h00 - 20h00" },
+    { "day": "Samedi", "hours": "9h00 - 18h00" },
+    { "day": "Dimanche", "hours": "Fermé" }
+  ],
+  "contact": {
+    "address": "12 Rue de la Monnaie, 59800 Lille",
+    "phone": "03 20 12 34 56",
+    "phoneHref": "+33320123456",
+    "email": "contact@barbierduvieuxlille.fr",
+    "mapsQuery": "12 Rue de la Monnaie, 59800 Lille"
+  },
+  "social": {
+    "instagram": "https://instagram.com",
+    "facebook": "https://facebook.com"
+  },
+  "footer": {
+    "text": "Barbier du Vieux-Lille — Tous droits réservés"
+  }
+}

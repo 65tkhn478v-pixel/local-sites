@@ -4,33 +4,24 @@
 
 import { MOCK_PROSPECTS } from "./mockProspects";
 import { DEFAULT_PROSPECT_STATUS, DEFAULT_SITE_STATUS } from "./statuses";
-import { createDefaultHours, createEmptyProspectFields } from "./prospectFields";
 
 const STORAGE_KEY = "local-sites-dashboard/prospects";
 
-// Complète les prospects existants (créés avant l'ajout d'un champ) avec des
-// valeurs par défaut, sans écraser ce qui est déjà présent. Permet de faire
-// évoluer le schéma sans migration ni base de données.
-function normalizeProspect(prospect) {
-  return {
-    ...createEmptyProspectFields(),
-    ...prospect,
-    services: Array.isArray(prospect.services) ? prospect.services : [],
-    hours: Array.isArray(prospect.hours) && prospect.hours.length
-      ? prospect.hours
-      : createDefaultHours(),
-  };
+// Garantit un tableau `services`, y compris pour les prospects créés avant
+// l'ajout de ce champ (pas de migration nécessaire).
+function withServices(prospect) {
+  return Array.isArray(prospect.services) ? prospect : { ...prospect, services: [] };
 }
 
 function readAll() {
   const raw = window.localStorage.getItem(STORAGE_KEY);
   if (!raw) {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(MOCK_PROSPECTS));
-    return MOCK_PROSPECTS.map(normalizeProspect);
+    return MOCK_PROSPECTS.map(withServices);
   }
   try {
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed.map(normalizeProspect) : [];
+    return Array.isArray(parsed) ? parsed.map(withServices) : [];
   } catch {
     return [];
   }
@@ -50,28 +41,11 @@ export function getProspect(id) {
   return readAll().find((p) => p.id === id) || null;
 }
 
-// Champs texte simples (hors services/hours, qui ont leur propre nettoyage).
-const TEXT_FIELDS = [
-  "name",
-  "activity",
-  "city",
-  "address",
-  "phone",
-  "email",
-  "currentWebsite",
-  "instagram",
-  "facebook",
-  "description",
-  "internalNotes",
-];
-
-function sanitizeFields(fields) {
-  const clean = createEmptyProspectFields();
-  TEXT_FIELDS.forEach((key) => {
-    if (fields[key] !== undefined) clean[key] = fields[key]?.trim() || "";
-  });
-  clean.services = Array.isArray(fields.services)
-    ? fields.services
+// Nettoie une liste de services : retire les espaces superflus et les lignes
+// entièrement vides.
+function sanitizeServices(services) {
+  return Array.isArray(services)
+    ? services
         .map((s) => ({
           name: s.name?.trim() || "",
           description: s.description?.trim() || "",
@@ -80,17 +54,21 @@ function sanitizeFields(fields) {
         }))
         .filter((s) => s.name || s.description || s.price || s.duration)
     : [];
-  clean.hours = Array.isArray(fields.hours) && fields.hours.length
-    ? fields.hours.map((h) => ({ day: h.day, hours: h.hours?.trim() || "" }))
-    : createDefaultHours();
-  return clean;
 }
 
 export function createProspect(fields) {
   const prospects = readAll();
   const newProspect = {
     id: (crypto.randomUUID && crypto.randomUUID()) || String(Date.now()),
-    ...sanitizeFields(fields),
+    name: fields.name?.trim() || "",
+    activity: fields.activity?.trim() || "",
+    city: fields.city?.trim() || "",
+    address: fields.address?.trim() || "",
+    phone: fields.phone?.trim() || "",
+    currentWebsite: fields.currentWebsite?.trim() || "",
+    instagram: fields.instagram?.trim() || "",
+    description: fields.description?.trim() || "",
+    services: sanitizeServices(fields.services),
     status: DEFAULT_PROSPECT_STATUS,
     siteStatus: DEFAULT_SITE_STATUS,
     siteUrl: null,
@@ -105,12 +83,9 @@ export function updateProspect(id, fields) {
   const prospects = readAll();
   const index = prospects.findIndex((p) => p.id === id);
   if (index === -1) return null;
-  // `fields` peut être un patch partiel (ex. changement de statut seul) ou le
-  // formulaire complet (création/édition) : on ne nettoie que si les champs
-  // "fiche" (texte, services, hours) sont présents, pour ne pas écraser
-  // status/siteStatus/siteUrl gérés ailleurs.
-  const hasFormFields = TEXT_FIELDS.some((key) => fields[key] !== undefined);
-  const patch = hasFormFields ? sanitizeFields({ ...prospects[index], ...fields }) : fields;
+  const patch = fields.services !== undefined
+    ? { ...fields, services: sanitizeServices(fields.services) }
+    : fields;
   prospects[index] = { ...prospects[index], ...patch };
   writeAll(prospects);
   return prospects[index];

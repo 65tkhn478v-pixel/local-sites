@@ -422,27 +422,6 @@ a {
   background: var(--color-surface);
 }
 
-.form-section {
-  padding-top: 1.5rem;
-  margin-top: 1.5rem;
-  border-top: 1px solid var(--color-border);
-}
-
-.form-section:first-of-type {
-  padding-top: 0;
-  margin-top: 0;
-  border-top: none;
-}
-
-.form-section-title {
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--color-text-muted);
-  margin: 0 0 1rem;
-}
-
 .service-rows {
   display: flex;
   flex-direction: column;
@@ -495,39 +474,6 @@ a {
 .service-row-remove:hover {
   border-color: var(--badge-danger-text);
   color: var(--badge-danger-text);
-}
-
-.hours-rows {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.hours-row {
-  display: grid;
-  grid-template-columns: 6rem 1fr;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.hours-row-day {
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-
-.hours-row input {
-  font: inherit;
-  padding: 0.55rem 0.65rem;
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  background: var(--color-bg);
-  color: var(--color-text);
-}
-
-.hours-row input:focus {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 1px;
-  background: var(--color-surface);
 }
 
 .form-actions {
@@ -657,32 +603,6 @@ a {
   font-size: 0.82rem;
   color: var(--color-text-muted);
   white-space: nowrap;
-}
-
-.hours-table {
-  width: 100%;
-  margin-top: 0.75rem;
-  border-collapse: collapse;
-  font-size: 0.9rem;
-}
-
-.hours-table td {
-  padding: 0.45rem 0;
-  border-bottom: 1px solid var(--color-border);
-}
-
-.hours-table tr:last-child td {
-  border-bottom: none;
-}
-
-.hours-table td:first-child {
-  font-weight: 600;
-  width: 40%;
-}
-
-.hours-table td:last-child {
-  color: var(--color-text-muted);
-  text-align: right;
 }
 
 .status-select {

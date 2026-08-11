@@ -35,30 +35,17 @@ disque, rien n'est partagé entre navigateurs/machines.
 Un bouton "Réinitialiser les données de démo" sur le Dashboard permet de repartir
 du jeu de données d'origine.
 
-### Fiche prospect
-
-La forme complète d'un prospect est définie dans `src/data/prospectFields.js` et
-regroupée en 4 sections, aussi bien dans le formulaire que sur la fiche détail :
-
-- **Identité** — nom du commerce, activité, adresse, ville, téléphone, email.
-- **Présence en ligne** — site actuel, Instagram, Facebook.
-- **Contenu** — description, services (liste libre nom/description/prix/durée),
-  horaires (7 jours fixes). `services` et `hours` reprennent volontairement la
-  forme attendue par `templates/business/` (voir `prospects/example/data.json`),
-  pour qu'une future génération de site consomme ces données sans transformation.
-- **Commercial** — notes internes (visibles uniquement dans le dashboard), statut
-  prospect (modifiable directement depuis la fiche détail).
-
-`store.js` complète automatiquement les prospects créés avant l'ajout d'un champ
-(`normalizeProspect`) : pas de migration nécessaire pour les données déjà en
-`localStorage`.
+Chaque prospect peut aussi avoir une liste de `services` (nom, description, prix,
+durée) — même forme que celle attendue par `templates/business/` (voir
+`prospects/example/data.json`), pour qu'une future génération de site consomme ces
+données sans transformation. Les prospects créés avant l'ajout de ce champ
+continuent de fonctionner : `store.js` leur attribue une liste vide par défaut.
 
 ## Pages
 
 - **Dashboard** (`/`) — statistiques (prospects, sites générés, à contacter) + liste
   des prospects + bouton "+ Nouveau prospect".
-- **Nouveau prospect** (`/prospects/new`) — formulaire de création, organisé en
-  4 sections (voir "Fiche prospect" ci-dessus).
+- **Nouveau prospect** (`/prospects/new`) — formulaire de création.
 - **Détail prospect** (`/prospects/:id`) — toutes les informations, statut prospect
   (modifiable), statut du site, boutons "Générer le site" et "Générer l'email"
   (visuels uniquement en V1 — aucune génération réelle), "Voir le site" (si un site

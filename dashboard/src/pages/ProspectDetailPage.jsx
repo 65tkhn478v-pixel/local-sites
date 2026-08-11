@@ -5,23 +5,14 @@ import { PROSPECT_STATUSES } from "../data/statuses";
 import StatusBadge from "../components/StatusBadge";
 import Toast from "../components/Toast";
 
-const IDENTITY_ROWS = [
+const INFO_ROWS = [
   { key: "activity", label: "Activité" },
-  { key: "address", label: "Adresse" },
   { key: "city", label: "Ville" },
+  { key: "address", label: "Adresse" },
   { key: "phone", label: "Téléphone" },
-  { key: "email", label: "Email" },
-];
-
-const ONLINE_PRESENCE_ROWS = [
   { key: "currentWebsite", label: "Site actuel" },
   { key: "instagram", label: "Instagram" },
-  { key: "facebook", label: "Facebook" },
 ];
-
-function isLikelyUrl(value) {
-  return /^https?:\/\//i.test(value);
-}
 
 export default function ProspectDetailPage() {
   const { id } = useParams();
@@ -78,32 +69,12 @@ export default function ProspectDetailPage() {
       <div className="detail-grid">
         <div className="detail-main">
           <div className="card">
-            <h2>Identité</h2>
+            <h2>Informations</h2>
             <dl className="info-list">
-              {IDENTITY_ROWS.map(({ key, label }) => (
+              {INFO_ROWS.map(({ key, label }) => (
                 <div className="info-row" key={key}>
                   <dt>{label}</dt>
                   <dd>{prospect[key] || "—"}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-
-          <div className="card">
-            <h2>Présence en ligne</h2>
-            <dl className="info-list">
-              {ONLINE_PRESENCE_ROWS.map(({ key, label }) => (
-                <div className="info-row" key={key}>
-                  <dt>{label}</dt>
-                  <dd>
-                    {prospect[key] && isLikelyUrl(prospect[key]) ? (
-                      <a href={prospect[key]} target="_blank" rel="noopener noreferrer">
-                        {prospect[key]}
-                      </a>
-                    ) : (
-                      prospect[key] || "—"
-                    )}
-                  </dd>
                 </div>
               ))}
             </dl>
@@ -143,20 +114,6 @@ export default function ProspectDetailPage() {
               </ul>
             )}
           </div>
-
-          <div className="card">
-            <h2>Horaires</h2>
-            <table className="hours-table">
-              <tbody>
-                {prospect.hours.map((entry) => (
-                  <tr key={entry.day}>
-                    <td>{entry.day}</td>
-                    <td>{entry.hours || "—"}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
         </div>
 
         <div className="detail-side">
@@ -174,13 +131,6 @@ export default function ProspectDetailPage() {
                 </option>
               ))}
             </select>
-          </div>
-
-          <div className="card">
-            <h2>Notes internes</h2>
-            <p className="description-text">
-              {prospect.internalNotes || "Aucune note interne."}
-            </p>
           </div>
 
           <div className="card">

@@ -5,14 +5,23 @@ import { PROSPECT_STATUSES } from "../data/statuses";
 import StatusBadge from "../components/StatusBadge";
 import Toast from "../components/Toast";
 
-const INFO_ROWS = [
+const IDENTITY_ROWS = [
   { key: "activity", label: "Activité" },
-  { key: "city", label: "Ville" },
   { key: "address", label: "Adresse" },
+  { key: "city", label: "Ville" },
   { key: "phone", label: "Téléphone" },
+  { key: "email", label: "Email" },
+];
+
+const ONLINE_PRESENCE_ROWS = [
   { key: "currentWebsite", label: "Site actuel" },
   { key: "instagram", label: "Instagram" },
+  { key: "facebook", label: "Facebook" },
 ];
+
+function isLikelyUrl(value) {
+  return /^https?:\/\//i.test(value);
+}
 
 export default function ProspectDetailPage() {
   const { id } = useParams();
@@ -69,12 +78,32 @@ export default function ProspectDetailPage() {
       <div className="detail-grid">
         <div className="detail-main">
           <div className="card">
-            <h2>Informations</h2>
+            <h2>Identité</h2>
             <dl className="info-list">
-              {INFO_ROWS.map(({ key, label }) => (
+              {IDENTITY_ROWS.map(({ key, label }) => (
                 <div className="info-row" key={key}>
                   <dt>{label}</dt>
                   <dd>{prospect[key] || "—"}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+
+          <div className="card">
+            <h2>Présence en ligne</h2>
+            <dl className="info-list">
+              {ONLINE_PRESENCE_ROWS.map(({ key, label }) => (
+                <div className="info-row" key={key}>
+                  <dt>{label}</dt>
+                  <dd>
+                    {prospect[key] && isLikelyUrl(prospect[key]) ? (
+                      <a href={prospect[key]} target="_blank" rel="noopener noreferrer">
+                        {prospect[key]}
+                      </a>
+                    ) : (
+                      prospect[key] || "—"
+                    )}
+                  </dd>
                 </div>
               ))}
             </dl>
@@ -85,6 +114,48 @@ export default function ProspectDetailPage() {
             <p className="description-text">
               {prospect.description || "Aucune description renseignée."}
             </p>
+          </div>
+
+          <div className="card">
+            <h2>Services</h2>
+            {prospect.services.length === 0 ? (
+              <p>Aucun service renseigné.</p>
+            ) : (
+              <ul className="service-list">
+                {prospect.services.map((service, index) => (
+                  <li className="service-list-item" key={index}>
+                    <div className="service-list-main">
+                      <span className="service-list-name">
+                        {service.name || "—"}
+                      </span>
+                      {service.description && (
+                        <span className="service-list-description">
+                          {service.description}
+                        </span>
+                      )}
+                    </div>
+                    <div className="service-list-meta">
+                      {service.duration && <span>{service.duration}</span>}
+                      {service.price && <span>{service.price}</span>}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div className="card">
+            <h2>Horaires</h2>
+            <table className="hours-table">
+              <tbody>
+                {prospect.hours.map((entry) => (
+                  <tr key={entry.day}>
+                    <td>{entry.day}</td>
+                    <td>{entry.hours || "—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
 
@@ -103,6 +174,13 @@ export default function ProspectDetailPage() {
                 </option>
               ))}
             </select>
+          </div>
+
+          <div className="card">
+            <h2>Notes internes</h2>
+            <p className="description-text">
+              {prospect.internalNotes || "Aucune note interne."}
+            </p>
           </div>
 
           <div className="card">

@@ -6,3 +6,9 @@ dist/
 .vscode/
 .idea/
 .claude/settings.local.json
+
+# Sites générés par le dashboard (dashboard/server/generateSite.js) : jamais
+# versionnés. prospects/example/ reste une exception (donnée de démo de
+# référence, pas un site généré).
+prospects/*/
+!prospects/example/

@@ -101,6 +101,15 @@ export default function ProspectDetailPage() {
               {prospect.description || "Aucune description renseignée."}
             </p>
           </div>
+
+          <div className="card">
+            <h2>Services</h2>
+            <p className="description-text">
+              {typeof prospect.services === "string" && prospect.services.trim()
+                ? prospect.services
+                : "Aucun service renseigné."}
+            </p>
+          </div>
         </div>
 
         <div className="detail-side">

@@ -3,8 +3,10 @@ import { Link, useParams } from "react-router-dom";
 import { getProspect, updateProspect } from "../data/store";
 import { PROSPECT_STATUSES } from "../data/statuses";
 import { requestSiteGeneration } from "../data/generateSite";
+import { generateEmail } from "../data/generateEmail";
 import StatusBadge from "../components/StatusBadge";
 import Toast from "../components/Toast";
+import EmailModal from "../components/EmailModal";
 
 const INFO_ROWS = [
   { key: "activity", label: "Activité" },
@@ -20,6 +22,7 @@ export default function ProspectDetailPage() {
   const [version, setVersion] = useState(0);
   const [toast, setToast] = useState("");
   const [generating, setGenerating] = useState(false);
+  const [emailResult, setEmailResult] = useState(null);
 
   const prospect = getProspect(id);
 
@@ -60,13 +63,23 @@ export default function ProspectDetailPage() {
   }
 
   function handleGenerateEmail() {
-    // V1 : bouton visuel uniquement, aucune génération réelle d'email.
-    setToast("Génération d'email à venir — fonctionnalité non implémentée en V1.");
+    try {
+      setEmailResult(generateEmail(prospect));
+    } catch (err) {
+      setToast(err.message || "Impossible de générer l'email.");
+    }
   }
 
   return (
     <div>
       <Toast message={toast} onClose={() => setToast("")} />
+      {emailResult && (
+        <EmailModal
+          email={emailResult}
+          onClose={() => setEmailResult(null)}
+          onCopied={() => setToast("Email copié dans le presse-papiers.")}
+        />
+      )}
 
       <div className="page-header">
         <div>

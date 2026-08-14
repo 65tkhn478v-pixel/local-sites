@@ -7,6 +7,7 @@ données (`data.json`).
 Aucune base de données, aucun backend, aucune API, aucune authentification,
 aucune dépendance externe.
 
+
 ## Structure
 
 ```

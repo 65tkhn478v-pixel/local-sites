@@ -1,0 +1,9 @@
+{
+  "name": "local-sites",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build:deploy": "node scripts/build-deploy.js"
+  }
+}

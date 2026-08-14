@@ -12,3 +12,7 @@ dist/
 # référence, pas un site généré).
 prospects/*/
 !prospects/example/
+
+# Dossier de build généré par scripts/build-deploy.js (assemblage des sites
+# prospects pour le déploiement Cloudflare) : jamais versionné.
+deploy/

@@ -12,3 +12,5 @@ dist/
 # référence, pas un site généré).
 prospects/*/
 !prospects/example/
+.wrangler/
+site-vitrine-locale/.wrangler/

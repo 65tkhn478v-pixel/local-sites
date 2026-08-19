@@ -21,7 +21,7 @@ const TEMPLATE_FILES = ["index.html", "style.css", "script.js"];
 export function slugify(name) {
   const slug = (name || "")
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "") // enlève les accents (marques diacritiques combinantes)
+    .replace(/[\u0300-\u036f]/g, "") // enleve les accents (marques diacritiques combinantes)
     .toLowerCase()
     .trim()
     .replace(/[^a-z0-9]+/g, "-")
@@ -191,9 +191,36 @@ function copyTemplateFile(repoRoot, fileName, destDir, transform) {
 }
 
 /**
+ * Écrit prospects/<slug>/wrangler.jsonc pour permettre un déploiement
+ * Cloudflare indépendant du prospect (assets servis directement depuis
+ * prospects/<slug>/, à plat). N'écrase jamais un wrangler.jsonc déjà présent :
+ * une fois le site déployé, ce fichier peut être personnalisé à la main
+ * (routes, nom de projet Cloudflare...) et une régénération ne doit pas
+ * l'effacer.
+ */
+function writeWranglerConfig(prospectDir, slug) {
+  const wranglerPath = path.join(prospectDir, "wrangler.jsonc");
+  if (fs.existsSync(wranglerPath)) return wranglerPath;
+
+  const config = {
+    name: slug,
+    compatibility_date: new Date().toISOString().slice(0, 10),
+    assets: {
+      directory: ".",
+    },
+  };
+  fs.writeFileSync(wranglerPath, JSON.stringify(config, null, 2) + "\n", "utf8");
+  return wranglerPath;
+}
+
+/**
  * Génère (ou régénère) le site local d'un prospect à partir de
  * templates/business/. Ne modifie jamais le template : ne fait que le
  * lire et copier son contenu.
+ *
+ * Structure produite, à plat, dans prospects/<slug>/ : data.json,
+ * index.html, style.css, script.js, wrangler.jsonc — déployable
+ * indépendamment (mêmes conventions que les sites prospects manuels).
  *
  * @returns {{slug: string, prospectDir: string, dataPath: string, sitePath: string, siteUrl: string}}
  */
@@ -211,9 +238,8 @@ export function generateSite(prospect, { repoRoot }) {
 
   const slug = resolveSlug(repoRoot, slugify(prospect.name), prospect.id ?? null);
   const prospectDir = path.join(repoRoot, PROSPECTS_DIR, slug);
-  const siteDir = path.join(prospectDir, "site");
 
-  fs.mkdirSync(siteDir, { recursive: true });
+  fs.mkdirSync(prospectDir, { recursive: true });
 
   const data = buildProspectData(prospect);
   fs.writeFileSync(
@@ -222,22 +248,25 @@ export function generateSite(prospect, { repoRoot }) {
     "utf8"
   );
 
-  // index.html : on adapte uniquement le chemin vers data.json (site/index.html
-  // → ../data.json, car data.json est un niveau au-dessus, dans prospects/<slug>/).
-  copyTemplateFile(repoRoot, "index.html", siteDir, (html) =>
+  // index.html : on adapte uniquement le chemin vers data.json (les deux
+  // fichiers vivent désormais au même niveau, dans prospects/<slug>/).
+  copyTemplateFile(repoRoot, "index.html", prospectDir, (html) =>
     html.replace(
       /<meta name="data-source" content="[^"]*">/,
-      '<meta name="data-source" content="../data.json">'
+      '<meta name="data-source" content="./data.json">'
     )
   );
-  copyTemplateFile(repoRoot, "style.css", siteDir);
-  copyTemplateFile(repoRoot, "script.js", siteDir);
+  copyTemplateFile(repoRoot, "style.css", prospectDir);
+  copyTemplateFile(repoRoot, "script.js", prospectDir);
+
+  const wranglerPath = writeWranglerConfig(prospectDir, slug);
 
   return {
     slug,
     prospectDir: path.relative(repoRoot, prospectDir),
     dataPath: path.relative(repoRoot, path.join(prospectDir, "data.json")),
-    sitePath: path.relative(repoRoot, siteDir),
-    siteUrl: `/${PROSPECTS_DIR}/${slug}/site/index.html`,
+    sitePath: path.relative(repoRoot, prospectDir),
+    wranglerPath: path.relative(repoRoot, wranglerPath),
+    siteUrl: `/${PROSPECTS_DIR}/${slug}/index.html`,
   };
 }

@@ -25,6 +25,12 @@ dashboard/       → dashboard interne (V1) pour piloter la création de sites
                    mockées en localStorage. Voir dashboard/README.md.
 ```
 
+Identité visuelle de `templates/business/` : typographie Alegreya (titres) + Karla (texte),
+palette crème/rouille/vert foncé/or, cartes arrondies — inspirée du design Claude Design
+« Vitrine Locale ». Le contenu de ce design (landing page de prospection, propre à l'auteur
+du repo) n'a pas été repris : seuls le style et la mise en page ont été extraits pour
+habiller le template générique piloté par `data.json`.
+
 Le HTML ne contient **aucune information propre à un commerce** : tout (nom, textes,
 services, tarifs, galerie, avis, horaires, coordonnées) vient de `data.json` et est
 injecté dynamiquement par `script.js` via `data-bind`, `data-bind-href` et `data-list`.
@@ -64,11 +70,14 @@ bouton "Générer le site" crée réellement :
 
 ```
 prospects/<slug-du-commerce>/
-  data.json      → informations du prospect, format compatible templates/business/
+  data.json        → informations du prospect, format compatible templates/business/
   site/
-    index.html   → copie du template, data-source adapté vers ../data.json
+    index.html     → copie du template, data-source adapté vers ../data.json
     style.css
     script.js
+  wrangler.jsonc    → config Cloudflare du prospect (assets.directory: "./site"),
+                       générée une seule fois : une régénération ne l'écrase pas,
+                       pour ne jamais effacer une personnalisation faite après déploiement
 ```
 
 Voir `dashboard/README.md` (section "Génération de site") pour le détail. C'est la
@@ -88,6 +97,19 @@ méthode recommandée — elle suit exactement les étapes manuelles ci-dessous.
 
 Le template (`templates/business/`) lui-même ne doit pas être modifié par commerce —
 seul un `data.json` change.
+
+## Déployer un prospect sur Cloudflare
+
+Chaque `prospects/<slug>/` généré contient son propre `wrangler.jsonc`
+(`assets.directory: "./site"`), indépendant des autres prospects et du template. Depuis
+`prospects/<slug>/` :
+
+```bash
+npx wrangler deploy
+```
+
+`prospects/example/` n'a pas de `wrangler.jsonc` (ce n'est qu'une donnée de démo, pas un
+prospect à déployer) ; générez d'abord un vrai prospect depuis le dashboard pour tester.
 
 ## Contenu du template
 

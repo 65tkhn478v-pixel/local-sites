@@ -60,15 +60,27 @@ production, aucun backend distant) et :
    attendu par `templates/business/` (les sections non collectées par le dashboard —
    services, galerie, avis, horaires — reçoivent un contenu générique explicitement
    marqué "à compléter", jamais des informations inventées) ;
-3. copie `templates/business/{index.html,style.css,script.js}` vers
-   `prospects/<slug>/site/`, en adaptant uniquement le chemin `data-source` de la
-   copie vers `../data.json` — le template original n'est jamais modifié ;
-4. met à jour le prospect dans le dashboard : `siteStatus = "Généré"`,
-   `siteUrl = "/prospects/<slug>/site/index.html"`.
+3. copie `templates/business/{index.html,style.css,script.js}` directement à plat
+   dans `prospects/<slug>/` (pas de sous-dossier), en adaptant uniquement le chemin
+   `data-source` de la copie vers `./data.json` — le template original n'est jamais
+   modifié ;
+4. écrit `prospects/<slug>/wrangler.jsonc` (`assets.directory: "."`) s'il n'existe
+   pas encore, pour permettre un déploiement Cloudflare indépendant de ce prospect
+   (`npx wrangler deploy` depuis `prospects/<slug>/`) ;
+5. met à jour le prospect dans le dashboard : `siteStatus = "Généré"`,
+   `siteUrl = "/prospects/<slug>/index.html"`.
 
-Régénérer un prospect déjà généré écrase son dossier existant (idempotent) ; deux
-prospects différents dont le nom se slugifierait à l'identique reçoivent des dossiers
-distincts (`<slug>-2`, `<slug>-3`, …).
+Chaque prospect généré est ainsi un site autonome à plat (`data.json`, `index.html`,
+`style.css`, `script.js`, `wrangler.jsonc` au même niveau dans `prospects/<slug>/`) —
+la même convention que les sites prospects créés manuellement (ex.
+`prospects/restaurant-italien-test/`).
+
+Régénérer un prospect déjà généré écrase `data.json`, `index.html`, `style.css` et
+`script.js` (idempotent) ; deux prospects différents dont le nom se slugifierait à
+l'identique reçoivent des dossiers distincts (`<slug>-2`, `<slug>-3`, …).
+`wrangler.jsonc`, lui, n'est jamais réécrit une fois créé — une régénération ne doit
+pas effacer une config personnalisée après déploiement (nom de projet Cloudflare,
+routes...).
 
 Le serveur de dev sert aussi directement `/prospects/**` et `/templates/**` (lecture
 disque, dev-only), donc le bouton "Voir le site" ouvre le site généré immédiatement,

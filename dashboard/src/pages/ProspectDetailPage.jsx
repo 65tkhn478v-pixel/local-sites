@@ -52,6 +52,7 @@ export default function ProspectDetailPage() {
         slug: result.slug,
         sitePath: result.sitePath,
         dataPath: result.dataPath,
+        wranglerPath: result.wranglerPath,
       });
       setVersion((v) => v + 1);
       setToast(`Site généré dans ${result.prospectDir}/`);
@@ -180,7 +181,8 @@ export default function ProspectDetailPage() {
                 {prospect.slug
                   ? "Site généré localement dans prospects/" +
                     prospect.slug +
-                    "/ — servi automatiquement par ce serveur de dev (npm run dev)."
+                    "/ — servi automatiquement par ce serveur de dev (npm run dev). " +
+                    "Un wrangler.jsonc y est aussi prêt pour un déploiement Cloudflare indépendant (npx wrangler deploy)."
                   : "Aperçu disponible uniquement si le repository entier est servi en statique depuis sa racine (voir README principal)."}
               </p>
             )}

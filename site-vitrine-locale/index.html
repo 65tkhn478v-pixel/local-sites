@@ -18,6 +18,7 @@
   * { box-sizing: border-box; }
   a { color: #A64327; }
   a:hover { color: #C2712A; }
+  .footer-legal-link:hover { color: #C2712A; }
   ::selection { background: #E8B44A; color: #33240A; }
   @keyframes vlPulse { 0%,100% { transform: scale(1); opacity: 1 } 50% { transform: scale(1.55); opacity: .35 } }
   @keyframes vlFloat { 0%,100% { transform: translate3d(0,0,0) } 50% { transform: translate3d(0,-22px,0) } }
@@ -201,8 +202,47 @@
 
   <footer style="max-width:900px;margin:0 auto;padding:24px 22px 110px;display:flex;gap:12px;justify-content:space-between;flex-wrap:wrap;align-items:center;border-top:1px solid #E7D9C4">
     <span style="font-family:Alegreya,serif;font-weight:700;font-size:17px">Vitrine Locale</span>
-    <span style="font-size:14px;color:#8C6A4A">Lille · Hauts-de-France · Micro-entreprise</span>
+    <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+      <span style="font-size:14px;color:#8C6A4A">Lille · Hauts-de-France · Micro-entreprise</span>
+      <a href="#mentions-legales" class="footer-legal-link" style="font-size:14px;color:#8C6A4A;text-decoration:none;font-weight:500;transition:color .2s ease">Mentions légales</a>
+    </div>
   </footer>
+
+  <section id="mentions-legales" style="max-width:760px;margin:0 auto;padding:48px 22px 70px;border-top:1px solid #E7D9C4">
+    <h2 style="font-family:Alegreya,serif;font-weight:800;font-size:clamp(26px,5.5vw,34px);line-height:1.15;letter-spacing:-0.015em;margin:0 0 28px">Mentions légales</h2>
+
+    <div style="margin-bottom:26px">
+      <h3 style="font-family:Karla,sans-serif;font-weight:700;font-size:17px;color:#2A211B;margin:0 0 8px">Éditeur du site</h3>
+      <p style="font-family:Karla,sans-serif;font-size:15px;line-height:1.7;color:#5C4A3B;margin:0">
+        Clément Louis — Lunaa Studio<br>
+        Entreprise individuelle (micro-entrepreneur)<br>
+        SIRET : 888 906 807 00019<br>
+        Adresse : 173 avenue de Dunkerque, 59000 Lille<br>
+        Email : contact@lunaa-studio.com
+      </p>
+    </div>
+
+    <div style="margin-bottom:26px">
+      <h3 style="font-family:Karla,sans-serif;font-weight:700;font-size:17px;color:#2A211B;margin:0 0 8px">Directeur de la publication</h3>
+      <p style="font-family:Karla,sans-serif;font-size:15px;line-height:1.7;color:#5C4A3B;margin:0">Clément Louis</p>
+    </div>
+
+    <div style="margin-bottom:26px">
+      <h3 style="font-family:Karla,sans-serif;font-weight:700;font-size:17px;color:#2A211B;margin:0 0 8px">Hébergement</h3>
+      <p style="font-family:Karla,sans-serif;font-size:15px;line-height:1.7;color:#5C4A3B;margin:0">
+        Cloudflare, Inc.<br>
+        101 Townsend St, San Francisco, CA 94107, États-Unis<br>
+        <a href="https://www.cloudflare.com">https://www.cloudflare.com</a>
+      </p>
+    </div>
+
+    <div style="margin-bottom:8px">
+      <h3 style="font-family:Karla,sans-serif;font-weight:700;font-size:17px;color:#2A211B;margin:0 0 8px">Propriété intellectuelle</h3>
+      <p style="font-family:Karla,sans-serif;font-size:15px;line-height:1.7;color:#5C4A3B;margin:0">L'ensemble des contenus (textes, visuels, structure du site) est protégé. Toute reproduction sans autorisation est interdite.</p>
+    </div>
+
+    <a href="#top" style="display:inline-block;margin-top:18px;font-size:14px;color:#8C6A4A;text-decoration:none;font-weight:600">↑ Retour en haut</a>
+  </section>
 
   <div ref="{{ dockRef }}" style="position:fixed;left:0;right:0;bottom:0;z-index:55;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:rgba(250,244,234,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid #E7D9C4;transform:translateY(130%);opacity:0;transition:transform .4s cubic-bezier(.2,.8,.2,1),opacity .3s ease">
     <div style="max-width:760px;margin:0 auto;display:flex;align-items:center;gap:12px">
